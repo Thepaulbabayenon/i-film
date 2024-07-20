@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1721225393555,
+      "tag": "0000_funny_vector",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1721361144330,
+      "tag": "0001_striped_triton",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1721361581112,
+      "tag": "0002_zippy_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1721386518699,
+      "tag": "0003_opposite_multiple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1721434681675,
+      "tag": "0004_acoustic_exiles",
+      "breakpoints": true
+    }
+  ]
+}
