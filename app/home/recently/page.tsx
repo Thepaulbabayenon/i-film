@@ -12,7 +12,7 @@ async function getData(userId: string) {
   .select()
   .from(movie)
   .orderBy(desc(movie.createdAt))
-  .limit(20)
+  .limit(8)
     
 
   return data;

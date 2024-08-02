@@ -1,7 +1,7 @@
 import React from 'react';
 
 const BlogPage: React.FC = () => {
-    // Sample blog data (replace with actual data from your backend or API)
+    
     const blogPosts = [
         {
             id: 1,
@@ -17,7 +17,7 @@ const BlogPage: React.FC = () => {
             date: "July 17, 2024",
             content: "Pellentesque nec justo nec mauris tempus finibus a id ligula. Donec quis libero vel dolor posuere dictum. Vestibulum sagittis lorem sed dui interdum placerat."
         }
-        // Add more blog posts as needed
+       
     ];
 
     return (

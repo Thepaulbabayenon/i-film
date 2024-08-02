@@ -1,7 +1,6 @@
 import React from 'react';
 
 const EmergencyPage: React.FC = () => {
-    // Sample emergency contacts (replace with actual data from your application)
     const emergencyContacts = [
         {
             id: 1,
@@ -23,7 +22,6 @@ const EmergencyPage: React.FC = () => {
             type: "Local Hospital",
             number: "(XXX) XXX-XXXX"
         }
-        // Add more emergency contacts as needed
     ];
 
     return (

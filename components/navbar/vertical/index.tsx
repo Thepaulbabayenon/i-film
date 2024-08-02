@@ -2,21 +2,18 @@
 
 import Image from "next/image";
 import { ComponentType, Dispatch, ReactNode, SetStateAction, useState } from "react";
-import Link from "./link";
-import Links from "./links";
+import NextLink from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
+import Logo from "../../../public/logo.svg";
+import useActiveSegment from "@/hooks/use-active-segment";
+import { motion } from "framer-motion";
 import {
   MagnifyingGlassIcon,
   HomeIcon,
   TvIcon,
   FilmIcon,
-  SparklesIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import NextLink from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
-import Logo from "../../../public/logo.svg"
-import useActiveSegment from "@/hooks/use-active-segment";
-import { motion } from "framer-motion";
 
 type iProps = {
   children: ReactNode;
@@ -35,80 +32,58 @@ type Props = {
 const list = [
   {
     id: 0,
-    href: "/profile",
+    href: "/dashboard",
     Icon: UserIcon,
-    to: "Profile",
+    to: "Dashboard",
   },
   {
     id: 1,
-    href: "/search",
+    href: "/usermanagement",
     Icon: MagnifyingGlassIcon,
-    to: "Search",
+    to: "User Management",
   },
   {
     id: 2,
-    href: "/",
+    href: "/filmmanagement",
     Icon: HomeIcon,
-    to: "Home",
+    to: "Film Management",
   },
   {
     id: 3,
-    href: "/series",
+    href: "/content",
     Icon: TvIcon,
-    to: "Series",
+    to: "Content Moderation",
   },
   {
     id: 4,
-    href: "/movies",
+    href: "/recommendation",
     Icon: FilmIcon,
-    to: "Movies",
-  },
-  {
-    id: 5,
-    href: "/originals",
-    Icon: SparklesIcon,
-    to: "Originals",
+    to: "Recommendation",
   },
 ];
 
-export default function Vertical  () {
-  const [isOnHovered, setIsOnHovered] = useState(false);
-  const segment = useSelectedLayoutSegment();
-  const isHiddenLogo = segment === "profile";
+const LinkComponent = ({ id, href, to, Icon, isOnHovered, setIsOnHovered }: Props) => {
+  const isActive = useActiveSegment(href);
 
-  const Linkk = ({ id, href, to, Icon, isOnHovered, setIsOnHovered }: Props) => {
-    const isActive = useActiveSegment(href);
-  
-    const handleCollapseSidebar = () => {
-      setTimeout(() => {
-        setIsOnHovered(false);
-      }, 100);
-    };
-  
-
-  const Links = ({ setIsOnHovered }: iProps) => {
-    return (
-      <div className="mb-36 grid flex-1 items-center">
-        <ul
-          onMouseEnter={() => setIsOnHovered(true)}
-          onMouseLeave={() => setIsOnHovered(false)}>
-        </ul>
-      </div>
-    );
+  const handleCollapseSidebar = () => {
+    setTimeout(() => {
+      setIsOnHovered(false);
+    }, 100);
   };
 
   return (
-    <>
-     <motion.li
+    <motion.li
       onClick={handleCollapseSidebar}
       whileHover={{ scale: 1.1, x: "5px" }}
-      whileTap={{ scale: 0.95 }}>
+      whileTap={{ scale: 0.95 }}
+    >
       <NextLink
         href={href}
         className={`
           ${isActive ? "opacity-100" : "opacity-fade"}
           ${href === "#" ? "cursor-not-allowed" : ""} 
-         group relative flex items-center p-4 hover:opacity-100`}>
+         group relative flex p-4 hover:opacity-100`}
+      >
         <Icon
           className={`${
             isActive ? "fill-white" : ""
@@ -122,20 +97,45 @@ export default function Vertical  () {
           className={`
           ${isActive ? "text-white" : ""} 
           ${isOnHovered ? "ml-16 opacity-100" : "left-0 opacity-0"}
-           transition-smooth absolute z-10 grid h-full w-full items-center text-lg group-hover:text-white`}>
+           transition-smooth absolute z-10 grid h-full w-full text-lg group-hover:text-white`}
+        >
           {to}
         </span>
       </NextLink>
     </motion.li>
+  );
+};
+
+const Links = ({ children, setIsOnHovered }: iProps) => {
+  return (
+    <div className="mb-36 grid flex-1 items-center">
+      <ul
+        onMouseEnter={() => setIsOnHovered(true)}
+        onMouseLeave={() => setIsOnHovered(false)}
+      >
+        {children}
+      </ul>
+    </div>
+  );
+};
+
+export default function Vertical() {
+  const [isOnHovered, setIsOnHovered] = useState(false);
+  const segment = useSelectedLayoutSegment();
+  const isHiddenLogo = segment === "profile";
+
+  return (
+    <>
       <div
         className={`${
           isOnHovered ? "opacity-100" : "opacity-0"
-        } transition-smooth pointer-events-none fixed  z-40 h-screen w-screen bg-gradient-to-r from-background-dark to-transparent`}
+        } transition-smooth pointer-events-none fixed z-40 h-screen w-screen bg-gradient-to-r from-background-dark to-transparent`}
       />
       <nav className="sticky top-0 z-50 flex left-0 h-screen flex-col">
         <NextLink
           href="https://github.com/ntabucejo/disney-plus"
-          className="py-12 px-6">
+          className="py-12 px-6"
+        >
           <Image
             alt="Logo"
             src={Logo}
@@ -150,7 +150,7 @@ export default function Vertical  () {
         </NextLink>
         <Links setIsOnHovered={setIsOnHovered}>
           {list.map(({ id, href, to, Icon }) => (
-            <Link
+            <LinkComponent
               key={id}
               id={id}
               href={href}
@@ -164,8 +164,4 @@ export default function Vertical  () {
       </nav>
     </>
   );
-};
-
 }
-
-

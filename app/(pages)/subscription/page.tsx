@@ -9,7 +9,6 @@ interface SubscriptionPlan {
 }
 
 const SubscriptionsPage: React.FC = () => {
-    // Sample subscription plans data (replace with actual data from your application)
     const [subscriptionPlans] = useState<SubscriptionPlan[]>([
         {
             id: 1,
@@ -29,7 +28,6 @@ const SubscriptionsPage: React.FC = () => {
             price: 49.99,
             features: ["Access to all features", "Dedicated account manager"]
         }
-        // Add more subscription plans as needed
     ]);
 
     const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
@@ -40,7 +38,6 @@ const SubscriptionsPage: React.FC = () => {
 
     const handleSubscription = () => {
         if (selectedPlan !== null) {
-            // Handle subscription logic here (e.g., redirect to payment gateway, show confirmation)
             console.log(`Subscribing to plan with id: ${selectedPlan}`);
         } else {
             console.error("No plan selected.");

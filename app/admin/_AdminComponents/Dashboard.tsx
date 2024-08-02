@@ -4,12 +4,12 @@ interface Props {
     
 }
 
-const page = (props: Props) => {
+const Dashboard = (props: Props) => {
     return (
         <div>
-            hahahah
+            Dashboard
         </div>
     )
 }
 
-export default page
+export default Dashboard

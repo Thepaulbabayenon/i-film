@@ -1,7 +1,6 @@
 import React from 'react';
 
 const FAQPage: React.FC = () => {
-    // Sample FAQ data (replace with actual data from your application)
     const faqs = [
         {
             id: 1,
@@ -18,7 +17,6 @@ const FAQPage: React.FC = () => {
             question: "Do you offer international shipping?",
             answer: "Yes, we offer international shipping to most countries. Shipping rates and times may vary."
         },
-        // Add more FAQ items as needed
     ];
 
     return (

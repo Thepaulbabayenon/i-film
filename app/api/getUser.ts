@@ -1,12 +1,23 @@
 import { db } from "@/app/db/drizzle";
 import { users, watchLists, movie, userInteractions } from "@/app/db/schema";
-import { desc, eq, and } from "drizzle-orm";
+import { desc, eq, and, like } from "drizzle-orm";
 
-export async function getUserData(userId: string) {
-  // Log the userId for debugging
-  console.log("Fetching data for user ID:", userId);
+export async function getUserData(userEmail: string) {
+  console.log("Fetching data for user email:", userEmail);
 
-  // Fetch user data
+  // Fetch the user ID based on the email
+  const userIdData = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, userEmail))
+    .limit(1);
+
+  if (userIdData.length === 0) {
+    throw new Error("User not found");
+  }
+
+  const userId = userIdData[0].id;
+
   const userData = await db
     .select({
       id: users.id,
@@ -18,11 +29,6 @@ export async function getUserData(userId: string) {
     .where(eq(users.id, userId))
     .limit(1);
 
-  if (userData.length === 0) {
-    throw new Error("User not found");
-  }
-
-  // Fetch watchlist data
   const watchlistData = await db
     .select({
       title: movie.title,
@@ -39,7 +45,6 @@ export async function getUserData(userId: string) {
     .leftJoin(watchLists, eq(movie.id, watchLists.movieId))
     .where(eq(watchLists.userId, userId));
 
-  // Fetch top 10 movies
   const top10Data = await db
     .select({
       title: movie.title,
@@ -54,7 +59,6 @@ export async function getUserData(userId: string) {
     .orderBy(desc(movie.release))
     .limit(10);
 
-  // Fetch favorites
   const favoritesData = await db
     .select({
       title: movie.title,
@@ -67,10 +71,12 @@ export async function getUserData(userId: string) {
     })
     .from(movie)
     .leftJoin(userInteractions, eq(movie.id, userInteractions.movieId))
-    .where(and(
-      eq(userInteractions.userId, userId),
-      eq(userInteractions.rating, 5)
-    ));
+    .where(
+      and(
+        eq(userInteractions.userId, userId),
+        eq(userInteractions.rating, 5)
+      )
+    );
 
   return {
     user: userData[0] || null,
@@ -78,4 +84,21 @@ export async function getUserData(userId: string) {
     top10: top10Data,
     favorites: favoritesData,
   };
+}
+
+export async function getUsersByName(userName: string) {
+  console.log("Searching for users with name:", userName);
+
+  // Fetch users whose names contain the search term (case-insensitive)
+  const usersData = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      image: users.image,
+    })
+    .from(users)
+    .where(like(users.name, `%${userName}%`));
+
+  return usersData;
 }

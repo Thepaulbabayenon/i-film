@@ -6,9 +6,7 @@ const FeedbackPage: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Here you can handle the submission of feedback (e.g., send to backend, display confirmation, etc.)
         console.log('Feedback submitted:', feedback);
-        // Clear the feedback input after submission
         setFeedback('');
     };
 

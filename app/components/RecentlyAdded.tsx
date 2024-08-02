@@ -26,7 +26,7 @@ async function getData(userId: string) {
     })
     .from(movie)
     .leftJoin(accounts, eq(accounts.userId, userId)) 
-    .orderBy(desc(movie.createdAt))
+    .orderBy(asc(movie.rank))
     .limit(4);
 
   return data;

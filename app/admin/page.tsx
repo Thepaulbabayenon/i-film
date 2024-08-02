@@ -1,6 +1,8 @@
 "use client";
  
+import SimpleSlider from "../components/MovieSlider";
 import { UploadButton } from "../utils/uploadthing";
+import Dashboard from "./_AdminComponents/Dashboard";
  
 export default function Home() {
   return (
@@ -8,7 +10,8 @@ export default function Home() {
 
 
         <div>
-          admin page
+          <Dashboard />
+          <SimpleSlider />
         </div>
 
 

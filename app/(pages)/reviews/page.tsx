@@ -9,11 +9,9 @@ interface Review {
 }
 
 const ReviewsPage: React.FC = () => {
-    // Sample reviews data (replace with actual data from your application)
     const [reviews, setReviews] = useState<Review[]>([
         { id: 1, userName: "John Doe", rating: 4, comment: "Great product, highly recommend!" },
         { id: 2, userName: "Jane Smith", rating: 5, comment: "Excellent service and fast delivery." }
-        // Add more reviews as needed
     ]);
 
     const [newReview, setNewReview] = useState<Review>({ id: 0, userName: "", rating: 0, comment: "" });
@@ -28,7 +26,6 @@ const ReviewsPage: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Generate a new unique id (replace with actual id generation logic if needed)
         const newId = reviews.length + 1;
         const reviewToAdd: Review = { ...newReview, id: newId };
         setReviews([...reviews, reviewToAdd]);

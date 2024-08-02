@@ -17,18 +17,18 @@ async function getData(userId: string) {
       release: movie.release,
       id: movie.id,
       youtubeString: movie.youtubeString,
-      watchListId: watchLists.id, // Assuming 'watchLists' is a table you want to join
+      watchListId: watchLists.id, 
     })
     .from(movie)
     .leftJoin(watchLists, eq(movie.id, watchLists.movieId))
-    .where(eq(watchLists.userId, userId)); // Use eq function to create a comparison expression
+    .where(eq(watchLists.userId, userId));
 
   try {
-    const data = await query; // Execute the query
+    const data = await query; 
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
-    throw error; // Handle or propagate the error as needed
+    throw error; 
   }
 }
 
@@ -38,9 +38,9 @@ export default async function Favorites() {
     const data = await getData(session?.user?.email as string);
 
     const userName = session?.user?.name || 'User';
-    const firstName = userName.split(' ')[0]; // Extract the first name
+    const firstName = userName.split(' ')[0];
 
-    // Remove duplicates based on movie ID
+  
     const uniqueMovies = Array.from(
       new Map(data.map(movie => [movie.id, movie])).values()
     );

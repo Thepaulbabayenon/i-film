@@ -11,12 +11,10 @@ const TechnicalPage: React.FC = () => {
                     <li><strong>Dimensions:</strong> 10in x 5in x 3in</li>
                     <li><strong>Weight:</strong> 2.5 lbs</li>
                     <li><strong>Color:</strong> Black</li>
-                    {/* Add more specifications as needed */}
                 </ul>
                 <h2>Technical Documentation</h2>
                 <p>Here you can find technical documentation, user manuals, and guides related to our products.</p>
                 <a href="/documentation/user-manual.pdf" target="_blank" rel="noopener noreferrer">User Manual (PDF)</a>
-                {/* Add more documentation links as needed */}
             </div>
         </div>
     );

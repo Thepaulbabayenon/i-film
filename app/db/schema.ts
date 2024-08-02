@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import type { AdapterAccount } from "next-auth/adapters";
+import z from "zod"
 
 export const users = pgTable("user", {
   id: text("id")
@@ -119,6 +120,19 @@ export const watchLists = pgTable('watchLists', {
   userId: text('userId').notNull(),
   movieId: integer('movieId').notNull().references(() => movie.id),
   isFavorite: boolean('isFavorite').default(false), 
+});
+
+export const insertMovieSchema = z.object({
+  imageString: z.string().min(1),
+  title: z.string().min(1),
+  age: z.number().int().positive(),
+  duration: z.number().positive(),
+  overview: z.string().min(1),
+  release: z.number().int().positive(),
+  videoSource: z.string().min(1),
+  category: z.string().min(1),
+  youtubeString: z.string().min(1),
+  rank: z.number().int().positive(),
 });
 
 export const accountRelations = relations(accounts, ({ one }) => ({
