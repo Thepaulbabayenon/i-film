@@ -27,6 +27,12 @@ export default async function SignUp() {
                         placeholder="Email"
                         className="bg-[#333] placeholder:text-gray-500 w-full inline-block"
                         />
+                        <Input 
+                        type="name" 
+                        name="name"
+                        placeholder="Name"
+                        className="bg-[#333] placeholder:text-gray-500 w-full inline-block"
+                        />
                         <Button 
                         type="submit"
                         className="w-full bg-gray-500"

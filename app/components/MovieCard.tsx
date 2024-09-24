@@ -90,7 +90,7 @@ export function MovieCard({
         age={age}
         duration={time}
         release={year} 
-        ratings={5}/>
+        ratings={ratings}/>
     </>
   );
 }
