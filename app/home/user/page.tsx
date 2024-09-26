@@ -3,6 +3,7 @@ import { authOptions } from "@/app/db/auth";
 import { getUserData } from "@/app/api/getUser"; // Ensure the import path is correct
 import Image from "next/image";
 import { MovieCard } from "@/app/components/MovieCard"; // Ensure the import path is correct
+import { Logo } from "@/app/components/Logo";
 
 export default async function Profile() {
   try {
@@ -30,6 +31,9 @@ export default async function Profile() {
 
     return (
       <div className="recently-added-container mb-20">
+        <div className="top-0 left-0 pt-1">
+          <Logo />
+        </div>
         <div className="flex flex-col items-center justify-center mt-10 px-5 sm:px-0">
           <div className="flex items-center space-x-4">
             <Image

@@ -40,11 +40,12 @@ export default function Navbar() {
   const [loading, setLoading] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const segment = useSelectedLayoutSegment();
-  const isHiddenLogo = segment === "profile";
   const pathName = usePathname();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  
+  // Check if the current segment is "profile"
+  const isProfilePage = segment === "user";
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -60,12 +61,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  
   const toggleNavbar = () => {
     setIsNavbarVisible(!isNavbarVisible);
   };
 
- 
   const performSearch = async (query: string) => {
     setLoading(true);
     try {
@@ -78,36 +77,35 @@ export default function Navbar() {
     }
   };
 
- 
   const debouncedSearch = debounce((query: string) => {
     performSearch(query);
   }, 300);
 
-  
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     debouncedSearch(e.target.value);
   };
 
-  
   useEffect(() => {
     if (searchInputRef.current) {
-    
       animatePlaceholder(searchInputRef.current, PLACEHOLDERS[0], onAnimationEnd);
     }
   }, []);
 
-  
   const toggleNotifications = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
   };
 
-  
   const notifications = [
     { id: 1, message: "New films are coming", time: "2 minutes ago" },
     { id: 2, message: "Watch Lagdos now", time: "10 minutes ago" },
     { id: 3, message: "Your profile was viewed", time: "1 hour ago" },
   ];
+
+  // Do not render the navbar if on the profile page
+  if (isProfilePage) {
+    return null;
+  }
 
   return (
     <>
@@ -133,9 +131,7 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link
             href="/home"
-            className={`w-32 transition-transform duration-500 ${isScrolled ? "scale-90" : "scale-100"} ${
-              isHiddenLogo ? "hidden" : ""
-            }`}
+            className={`w-32 transition-transform duration-500 ${isScrolled ? "scale-90" : "scale-100"}`}
           >
             <Image src={Logo} alt="Logo" priority width={65} height={65} />
           </Link>
@@ -250,5 +246,3 @@ export default function Navbar() {
     </>
   );
 }
-
-

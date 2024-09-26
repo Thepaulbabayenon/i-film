@@ -1,17 +1,29 @@
-// Footer.tsx
+'use client'
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from "../../public/logo.svg"
+import { useSelectedLayoutSegment } from 'next/navigation';
+
 
 const Footer = () => {
+  const segment = useSelectedLayoutSegment();
+  const isProfilePage = segment === "user";
+  if (isProfilePage) {
+    return null;
+  }
   return (
+    
     <footer className="bg-black text-gray-400 p-1 text-xs">
       <div className='max-w-7xl mx-auto flex flex-col items-center justify-center'>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
           <div>
           
             <h3 className="font-bold mb-3">Company Information</h3>
+ * not contain any business logic.
+ *
+ * @returns The JSX for the footer section of the website.
+ */
             <ul>
               <li>
                 <Link href="/contact">
