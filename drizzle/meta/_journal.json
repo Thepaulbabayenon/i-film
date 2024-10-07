@@ -36,6 +36,13 @@
       "when": 1721434681675,
       "tag": "0004_acoustic_exiles",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1727424421858,
+      "tag": "0005_familiar_vampiro",
+      "breakpoints": true
     }
   ]
 }

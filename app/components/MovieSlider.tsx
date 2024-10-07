@@ -105,7 +105,9 @@ export function MovieSlider() {
           duration={2} // Replace with actual movie duration
           release={2024} // Replace with actual movie release year
           ratings={4.5} // Replace with actual movie ratings
-        />
+          setUserRating={function (rating: number): void {
+            throw new Error("Function not implemented.");
+          } }        />
       )}
     </div>
   );

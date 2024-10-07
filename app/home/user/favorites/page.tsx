@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import Image from "next/image";
 import { movie, watchLists } from "@/app/db/schema";
 import { eq } from "drizzle-orm";
+import { Logo } from "@/app/components/Logo";
 
 async function getData(userId: string) {
   const query = db
@@ -62,6 +63,9 @@ export default async function Favorites() {
       <>
         <div className="recently-added-container mb-20"> {/* Add margin-bottom to this container */}
           <div className="items-center justify-center flex">
+            <div className="top-0 left-0 pt-1">
+          <Logo />
+          </div>
             <h1 className="text-gray-400 text-4xl font-bold items-center justify-center mt-10 px-5 sm:px-0 pt-9">
               {firstName.toLowerCase()}'s favorites
             </h1>

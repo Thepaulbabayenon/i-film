@@ -16,7 +16,7 @@ export default function Home() {
 
       <UploadButton
         endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
+        onClientUploadComplete={(res: any) => {
           // Do something with the response
           console.log("Files: ", res);
           alert("Upload Completed");

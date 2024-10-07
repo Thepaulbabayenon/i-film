@@ -111,9 +111,11 @@ export const userInteractions = pgTable('userInteractions', {
   id: serial('id').primaryKey(),
   userId: text('userId').notNull().references(() => users.id),
   movieId: integer('movieId').notNull().references(() => movie.id),
-  rating: integer('rating').notNull(), 
+  ratings: integer('ratings').notNull(), 
   timestamp: timestamp('timestamp').defaultNow().notNull(),
 });
+
+
 
 export const watchLists = pgTable('watchLists', {
   id: text('id').primaryKey().notNull(),

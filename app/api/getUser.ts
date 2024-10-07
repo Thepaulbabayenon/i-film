@@ -74,7 +74,7 @@ export async function getUserData(userEmail: string) {
     .where(
       and(
         eq(userInteractions.userId, userId),
-        eq(userInteractions.rating, 5)
+        eq(userInteractions.ratings, 5)
       )
     );
 

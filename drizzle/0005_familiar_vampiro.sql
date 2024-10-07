@@ -1,0 +1,1 @@
+ALTER TABLE "userInteractions" RENAME COLUMN "rating" TO "ratings";

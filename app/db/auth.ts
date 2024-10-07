@@ -1,3 +1,5 @@
+// app/db/auth.ts (or the appropriate path)
+
 import type { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
@@ -6,7 +8,6 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { accounts, sessions, users, verificationTokens } from "./schema";
-
 
 export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db),
@@ -37,17 +38,21 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token, user }: { session: Session; token: JWT; user: User }) {
-      session.user = user;
-      return session;
-    },
-    async jwt({ token, user }: { token: JWT; user: User }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
       }
       return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+      return session;
     },
   },
 } as NextAuthOptions;

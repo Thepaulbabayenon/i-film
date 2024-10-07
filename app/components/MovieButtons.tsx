@@ -46,7 +46,9 @@ export default function MovieButtons({
         overview={overview}
         release={releaseDate}
         title={title}
-        youtubeUrl={youtubeUrl} ratings={0}      />
+        youtubeUrl={youtubeUrl} ratings={0} setUserRating={function (rating: number): void {
+          throw new Error("Function not implemented.");
+        } }      />
     </>
   );
 }
