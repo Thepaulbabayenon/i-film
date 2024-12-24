@@ -1,4 +1,4 @@
-import { getServerSession } from "next-auth";
+import   getServerSession  from "next-auth";
 import { ReactNode } from "react";
 import { authOptions } from "../db/auth";
 import { redirect } from "next/navigation";

@@ -43,7 +43,7 @@
     "lucide-react": "^0.403.0",
     "neon": "^2.0.0",
     "next": "14.2.4",
-    "next-auth": "^4.24.7",
+    "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^6.9.14",
     "pg": "^8.12.0",
     "reac": "^0.0.0",

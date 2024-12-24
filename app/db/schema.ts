@@ -1,3 +1,5 @@
+// /app/db/schema.ts
+
 import {
   pgTable,
   serial,
@@ -8,39 +10,46 @@ import {
   doublePrecision,
   primaryKey,
   boolean,
+  uuid,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import type { AdapterAccount } from "next-auth/adapters";
-import z from "zod"
+import { relations, sql } from 'drizzle-orm';
+import z from 'zod';
 
-export const users = pgTable("user", {
-  id: text("id")
+export interface UserJSON {
+  id: string;
+  email_addresses: { email_address: string }[]; // Assuming email_addresses is an array of objects
+  image_url?: string; // Optional as it may not always be present
+  name?: string; // If name is available
+}
+
+// Users Table
+export const users = pgTable('user', {
+  id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: varchar("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  isAdmin: boolean("isAdmin").default(false), 
+  name: text('name'),
+  email: text('email').notNull().unique(),
+  emailVerified: timestamp('emailVerified', { mode: 'date' }),
+  image: text('image'),
+  isAdmin: boolean('isAdmin').default(false),
 });
 
-
+// Accounts Table
 export const accounts = pgTable(
-  "account",
+  'account',
   {
-    userId: text("userId")
+    userId: text('userId')
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
+      .references(() => users.id, { onDelete: 'cascade' }),
+    provider: text('provider').notNull(),
+    providerAccountId: text('providerAccountId').notNull(),
+    refresh_token: text('refresh_token'),
+    access_token: text('access_token'),
+    expires_at: integer('expires_at'),
+    token_type: text('token_type'),
+    scope: text('scope'),
+    id_token: text('id_token'),
+    session_state: text('session_state'),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -49,20 +58,22 @@ export const accounts = pgTable(
   })
 );
 
-export const sessions = pgTable("session", {
-  sessionToken: text("sessionToken").primaryKey(),
-  userId: text("userId")
+// Sessions Table
+export const sessions = pgTable('session', {
+  sessionToken: text('sessionToken').primaryKey(),
+  userId: text('userId')
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires: timestamp('expires', { mode: 'date' }).notNull(),
 });
 
+// VerificationTokens Table
 export const verificationTokens = pgTable(
-  "verificationToken",
+  'verificationToken',
   {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    identifier: text('identifier').notNull(),
+    token: text('token').notNull(),
+    expires: timestamp('expires', { mode: 'date' }).notNull(),
   },
   (verificationToken) => ({
     compositePk: primaryKey({
@@ -71,19 +82,20 @@ export const verificationTokens = pgTable(
   })
 );
 
+// Authenticators Table
 export const authenticators = pgTable(
-  "authenticator",
+  'authenticator',
   {
-    credentialID: text("credentialID").notNull().unique(),
-    userId: text("userId")
+    credentialID: text('credentialID').notNull().unique(),
+    userId: text('userId')
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    providerAccountId: text("providerAccountId").notNull(),
-    credentialPublicKey: text("credentialPublicKey").notNull(),
-    counter: integer("counter").notNull(),
-    credentialDeviceType: text("credentialDeviceType").notNull(),
-    credentialBackedUp: boolean("credentialBackedUp").notNull(),
-    transports: text("transports"),
+      .references(() => users.id, { onDelete: 'cascade' }),
+    providerAccountId: text('providerAccountId').notNull(),
+    credentialPublicKey: text('credentialPublicKey').notNull(),
+    counter: integer('counter').notNull(),
+    credentialDeviceType: text('credentialDeviceType').notNull(),
+    credentialBackedUp: boolean('credentialBackedUp').notNull(),
+    transports: text('transports'),
   },
   (authenticator) => ({
     compositePK: primaryKey({
@@ -92,7 +104,8 @@ export const authenticators = pgTable(
   })
 );
 
-export const movie = pgTable('movie', {
+// Film Table
+export const film = pgTable('film', {
   id: serial('id').primaryKey(),
   imageString: varchar('imageString').notNull(),
   title: varchar('title').notNull(),
@@ -104,27 +117,94 @@ export const movie = pgTable('movie', {
   category: varchar('category').notNull(),
   youtubeString: varchar('youtubeString').notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
-  rank: integer('rank').notNull()
+  rank: integer('rank').default(sql`0`).notNull(),  // Default rank
 });
 
-export const userInteractions = pgTable('userInteractions', {
-  id: serial('id').primaryKey(),
-  userId: text('userId').notNull().references(() => users.id),
-  movieId: integer('movieId').notNull().references(() => movie.id),
-  ratings: integer('ratings').notNull(), 
-  timestamp: timestamp('timestamp').defaultNow().notNull(),
-});
+// UserInteractions Table (Existing)
+export const userInteractions = pgTable(
+  'userInteractions',
+  {
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    filmId: integer('filmId')
+      .notNull()
+      .references(() => film.id, { onDelete: 'cascade' }),
+    ratings: integer('ratings').notNull(),
+    timestamp: timestamp('timestamp').defaultNow().notNull(),
+  },
+  (userInteractions) => ({
+    primaryKey: primaryKey({
+      columns: [userInteractions.userId, userInteractions.filmId],
+    }),
+  })
+);
 
+export const watchedFilms = pgTable(
+  'watchedFilms',
+  {
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    filmId: integer('filmId')
+      .notNull()
+      .references(() => film.id, { onDelete: 'cascade' }),
+    timestamp: timestamp('timestamp').defaultNow().notNull(),
+  },
+  (watchedFilms) => ({
+    primaryKey: primaryKey({
+      columns: [watchedFilms.userId, watchedFilms.filmId],
+    }),
+  })
+);
 
-
+// WatchLists Table
 export const watchLists = pgTable('watchLists', {
-  id: text('id').primaryKey().notNull(),
+  id: uuid('id').primaryKey(), // No default value
   userId: text('userId').notNull(),
-  movieId: integer('movieId').notNull().references(() => movie.id),
-  isFavorite: boolean('isFavorite').default(false), 
+  filmId: integer('filmId').notNull(),
+  isFavorite: boolean('isFavorite').default(false),
+  // ... other fields
 });
 
-export const insertMovieSchema = z.object({
+// Recommendations Table (New)
+export const filmRecommendations = pgTable('filmRecommendations', {
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),  // User receiving the recommendation
+  filmId: integer('filmId')
+    .notNull()
+    .references(() => film.id, { onDelete: 'cascade' }),  // Film being recommended
+  recommendedBy: text('recommendedBy')
+    .notNull() // User who recommended the film
+    .references(() => users.id, { onDelete: 'cascade' }),
+  timestamp: timestamp('timestamp').defaultNow().notNull(),  // When the recommendation was made
+});
+
+
+// UserRatings Table (New)
+export const userRatings = pgTable(
+  'userRatings',
+  {
+    id: serial('id'), // Regular column, not a primary key
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    filmId: integer('filmId')
+      .notNull()
+      .references(() => film.id, { onDelete: 'cascade' }),
+    rating: integer('rating').notNull(),
+    timestamp: timestamp('timestamp').defaultNow().notNull(),
+  },
+  (userRatings) => ({
+    primaryKey: primaryKey({
+      columns: [userRatings.userId, userRatings.filmId],
+    }),
+  })
+);
+
+// Zod Schema for Inserting Films
+export const insertFilmSchema = z.object({
   imageString: z.string().min(1),
   title: z.string().min(1),
   age: z.number().int().positive(),
@@ -137,13 +217,30 @@ export const insertMovieSchema = z.object({
   rank: z.number().int().positive(),
 });
 
+// Comments Table (New)
+export const comments = pgTable(
+  'comments',
+  {
+    id: serial('id').primaryKey(),  // Unique comment ID
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),  // Reference to the user
+    filmId: integer('filmId')
+      .notNull()
+      .references(() => film.id, { onDelete: 'cascade' }),  // Reference to the film
+    content: text('content').notNull(),  // The comment's content
+    createdAt: timestamp('createdAt').defaultNow().notNull(),  // Timestamp for when the comment was made
+  }
+);
+
+
+// Relations Definitions
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
     references: [users.id],
   }),
 }));
-
 
 export const sessionRelations = relations(sessions, ({ one }) => ({
   user: one(users, {
@@ -152,36 +249,34 @@ export const sessionRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
-
 export const userRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
   authenticators: many(authenticators),
   watchLists: many(watchLists),
+  userRatings: many(userRatings), // New relation
 }));
 
-
-export const movieRelations = relations(movie, ({ many }) => ({
+export const filmRelations = relations(film, ({ many }) => ({
   watchLists: many(watchLists),
+  userRatings: many(userRatings), // New relation
 }));
-
 
 export const userInteractionRelations = relations(userInteractions, ({ one }) => ({
   user: one(users, {
     fields: [userInteractions.userId],
     references: [users.id],
   }),
-  movie: one(movie, {
-    fields: [userInteractions.movieId],
-    references: [movie.id],
+  film: one(film, {
+    fields: [userInteractions.filmId],
+    references: [film.id],
   }),
 }));
 
-
 export const watchListRelations = relations(watchLists, ({ one }) => ({
-  movie: one(movie, {
-    fields: [watchLists.movieId],
-    references: [movie.id],
+  film: one(film, {
+    fields: [watchLists.filmId],
+    references: [film.id],
   }),
   user: one(users, {
     fields: [watchLists.userId],
@@ -189,10 +284,33 @@ export const watchListRelations = relations(watchLists, ({ one }) => ({
   }),
 }));
 
-
 export const authenticatorRelations = relations(authenticators, ({ one }) => ({
   user: one(users, {
     fields: [authenticators.userId],
     references: [users.id],
   }),
 }));
+
+export const userRatingsRelations = relations(userRatings, ({ one }) => ({
+  user: one(users, {
+    fields: [userRatings.userId],
+    references: [users.id],
+  }),
+  film: one(film, {
+    fields: [userRatings.filmId],
+    references: [film.id],
+  }),
+}));
+
+// Comments Relations
+export const commentsRelations = relations(comments, ({ one }) => ({
+  user: one(users, {
+    fields: [comments.userId],
+    references: [users.id],
+  }),
+  film: one(film, {
+    fields: [comments.filmId],
+    references: [film.id],
+  }),
+}));
+
